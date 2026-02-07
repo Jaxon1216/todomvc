@@ -58,6 +58,11 @@
           placeholder="输入新的待办事项，按回车添加..."
           autocomplete="off"
           >
+          <select id="todo-tag" class="todo-tag">
+            <option value="工作">工作</option>
+            <option value="生活" selected>生活</option>
+            <option value="学习">学习</option>
+          </select>
           <button id="add-todo-btn" class="btn btn-primary">添加</button>
         </div>
         <!-- 筛选按钮组 -->
@@ -66,6 +71,13 @@
           <button class="filter-btn" data-filter="active">未完成</button>
           <button class="filter-btn" data-filter="completed">已完成</button>
           <span class="todo-count">共 <span id="todo-count-num">0</span> 项</span>
+        </div>
+        <!-- 标签筛选按钮组 -->
+        <div class="todo-tag-filters">
+          <button class="tag-filter-btn active" data-tag="all">所有标签</button>
+          <button class="tag-filter-btn tag-blue" data-tag="工作">工作</button>
+          <button class="tag-filter-btn tag-green" data-tag="生活">生活</button>
+          <button class="tag-filter-btn tag-yellow" data-tag="学习">学习</button>
         </div>
         <!-- Todo 列表容器 -->
         <ul class="todo-list" id="todo-list">

@@ -198,6 +198,66 @@ button {
   background-color: #f8f9fa;
   border: 2px solid transparent;
   border-radius: var(--border-radius);
+}
+
+.todo-tag {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #2c3e50;
+  margin-left: 12px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.todo-tag:hover {
+  opacity: 0.8;
+}
+
+.tag-blue {
+  background-color: #e8f4fc;
+  color: #2980b9;
+}
+
+.tag-green {
+  background-color: #e8f8f5;
+  color: #27ae60;
+}
+
+.tag-yellow {
+  background-color: #fdf2e9;
+  color: #f39c12;
+}
+
+.todo-tag-filters {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.tag-filter-btn {
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  border: 2px solid transparent;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.tag-filter-btn:hover {
+  opacity: 0.8;
+}
+
+.tag-filter-btn.active {
+  border-color: var(--primary-color);
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.todo-input {
   font-size: 15px;
   outline: none;
   transition: all 0.2s;
