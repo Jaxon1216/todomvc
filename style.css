@@ -212,6 +212,154 @@ button {
   color: #95a5a6;
 }
 
+/* 标签选择下拉框 */
+.todo-tag-select {
+  padding: 14px 18px;
+  background-color: #f8f9fa;
+  border: 2px solid transparent;
+  border-radius: var(--border-radius);
+  font-size: 15px;
+  outline: none;
+  transition: all 0.2s;
+  cursor: pointer;
+  min-width: 120px;
+}
+
+.todo-tag-select:focus {
+  background-color: white;
+  border-color: var(--primary-color);
+}
+
+/* 标签筛选按钮样式 */
+.tag-filters {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #ecf0f1;
+}
+
+.tag-filter-label {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-right: 4px;
+}
+
+.tag-filter-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  background-color: #f8f9fa;
+  transition: all 0.2s;
+}
+
+.tag-filter-btn:hover {
+  background-color: #ecf0f1;
+}
+
+.tag-filter-btn.active {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.tag-color {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.tag-color.work {
+  background-color: #5dade2;
+}
+
+.tag-color.life {
+  background-color: #58d68d;
+}
+
+.tag-color.study {
+  background-color: #f4d03f;
+}
+
+/* Todo 项中的标签样式 */
+.todo-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-left: 8px;
+  flex-shrink: 0;
+}
+
+.todo-tag:hover {
+  opacity: 0.8;
+}
+
+.todo-tag.work {
+  background-color: #d4e6f1;
+  color: #2874a6;
+}
+
+.todo-tag.life {
+  background-color: #d5f5e3;
+  color: #1e8449;
+}
+
+.todo-tag.study {
+  background-color: #fcf3cf;
+  color: #9a7d0a;
+}
+
+.todo-tag .tag-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.todo-tag.work .tag-dot {
+  background-color: #5dade2;
+}
+
+.todo-tag.life .tag-dot {
+  background-color: #58d68d;
+}
+
+.todo-tag.study .tag-dot {
+  background-color: #f4d03f;
+}
+
+/* 无标签时的样式 */
+.todo-tag:not(.work):not(.life):not(.study) {
+  background-color: #ecf0f1;
+  color: #7f8c8d;
+  border: 1px dashed #bdc3c7;
+}
+
+.todo-tag:not(.work):not(.life):not(.study):hover {
+  background-color: #d5dbdb;
+}
+
+/* 标签编辑下拉框 */
+.tag-edit-select {
+  padding: 2px 6px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 12px;
+  outline: none;
+  cursor: pointer;
+  background-color: white;
+}
+
 /* 筛选按钮样式 */
 .todo-filters {
   display: flex;

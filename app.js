@@ -61,6 +61,14 @@ function initNavigation() {
 // 用于存储所有 Todo 项的数组
 let todos = [];
 let currentFilter = 'all';
+let currentTagFilter = 'all';
+
+// 标签配置
+const TAG_CONFIG = {
+    work: { label: '工作', class: 'work' },
+    life: { label: '生活', class: 'life' },
+    study: { label: '学习', class: 'study' }
+};
 /**
  * 初始化 Todo List 功能
  */
@@ -68,12 +76,13 @@ function initTodoList() {
     // 获取 DOM 元素
     const todoInput = document.getElementById('todo-input');
     const addTodoBtn = document.getElementById('add-todo-btn');
-    
+    const todoTagSelect = document.getElementById('todo-tag-select');
+
     // 点击添加按钮时添加新 Todo
     addTodoBtn.addEventListener('click', function() {
         addTodo();
     });
-    
+
     // 按回车键时添加新 Todo
     todoInput.addEventListener('keypress', function(event) {
         // event.key === 'Enter' 表示按下了回车键
@@ -84,7 +93,7 @@ function initTodoList() {
 
     const filterBtns = document.querySelectorAll('.filter-btn');
 
-    // 筛选按钮点击事件
+    // 状态筛选按钮点击事件
     filterBtns.forEach(function(btn) {
         btn.addEventListener('click', function() {
             // 更新按钮状态
@@ -92,38 +101,72 @@ function initTodoList() {
                 b.classList.remove('active');
             });
             this.classList.add('active');
-            
+
             // 更新筛选状态并重新渲染
             currentFilter = this.getAttribute('data-filter');
+            saveFilterState();
+            renderTodos();
+        });
+    });
+
+    // 标签筛选按钮点击事件
+    const tagFilterBtns = document.querySelectorAll('.tag-filter-btn');
+    tagFilterBtns.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            // 更新按钮状态
+            tagFilterBtns.forEach(function(b) {
+                b.classList.remove('active');
+            });
+            this.classList.add('active');
+
+            // 更新标签筛选状态并重新渲染
+            currentTagFilter = this.getAttribute('data-tag-filter');
+            saveFilterState();
             renderTodos();
         });
     });
     
     const todoList = document.getElementById('todo-list');
 
-    // 使用事件委托处理列表中的点击事件，删除功能
+    // 使用事件委托处理列表中的点击事件
     todoList.addEventListener('click', function(event) {
-    // event.target 是实际被点击的元素
-    const target = event.target;
-    
-    // 获取被点击元素所属的 Todo 项
-    const todoItem = target.closest('.todo-item');
-    if (!todoItem) return; // 如果没找到，说明点击的不是 Todo 项内部
-    
-    // 获取 Todo 项的 ID（从 data-id 属性读取）
-    const todoId = parseInt(todoItem.getAttribute('data-id'));
-    
+        // event.target 是实际被点击的元素
+        const target = event.target;
 
-    // 标记
-    // 判断点击的是删除按钮
-    if (target.classList.contains('todo-checkbox')) {
-        toggleTodo(todoId);
-    } else if (target.classList.contains('todo-delete')) {
-        deleteTodo(todoId);
-    }
+        // 获取被点击元素所属的 Todo 项
+        const todoItem = target.closest('.todo-item');
+        if (!todoItem) return; // 如果没找到，说明点击的不是 Todo 项内部
+
+        // 获取 Todo 项的 ID（从 data-id 属性读取）
+        const todoId = parseInt(todoItem.getAttribute('data-id'));
+
+        // 判断点击的是复选框
+        if (target.classList.contains('todo-checkbox')) {
+            toggleTodo(todoId);
+        } else if (target.classList.contains('todo-delete')) {
+            // 删除按钮
+            deleteTodo(todoId);
+        } else if (target.classList.contains('todo-tag')) {
+            // 点击标签进行编辑
+            event.stopPropagation();
+            startTagEdit(todoId, target);
+        }
+    });
+
+    // 处理标签编辑下拉框的 change 事件
+    todoList.addEventListener('change', function(event) {
+        if (event.target.classList.contains('tag-edit-select')) {
+            const todoItem = event.target.closest('.todo-item');
+            if (todoItem) {
+                const todoId = parseInt(todoItem.getAttribute('data-id'));
+                const newTag = event.target.value;
+                updateTodoTag(todoId, newTag);
+            }
+        }
     });
 
     loadTodosFromStorage();
+    loadFilterState();
 
     // 初始渲染
     renderTodos();
@@ -138,28 +181,32 @@ function initTodoList() {
 
 function addTodo() {
     const todoInput = document.getElementById('todo-input');
+    const todoTagSelect = document.getElementById('todo-tag-select');
     const text = todoInput.value.trim();
-    // 标记
+    const tag = todoTagSelect.value;
+
     if (text === '') {
         return;
     }
+
     const newTodo = {
         id: Date.now(),
-        // 标记
         text: text,
         completed: false,
+        tag: tag || null
     };
-    
+
     // 添加到数组
     todos.push(newTodo);
     saveTodosToStorage();
-    // 清空输入框
+
+    // 清空输入框和标签选择
     todoInput.value = '';
-    
+    todoTagSelect.value = '';
+
     // 重新渲染列表
     renderTodos();
-    // 如果写在外面，那就永远只能渲染一次，东西存进去了但是不会显示
-    
+
     // 在控制台输出，方便调试
     console.log('添加了新 Todo:', newTodo);
     console.log('当前所有 Todo:', todos);
@@ -168,18 +215,13 @@ function addTodo() {
 /**
  * 渲染 Todo 列表
  */
-
-//思路：更新统计个数，添加子节点吧？考虑特殊情况（判空），伪代码：
-// 获取dom节点，
-// 统计个数改为长度
-// 用模版字符串改写html，动态添加到ul下
 function renderTodos() {
     // 获取列表容器和空状态提示
     const todoList = document.getElementById('todo-list');
     const todoEmpty = document.getElementById('todo-empty');
     const todoCountNum = document.getElementById('todo-count-num');
 
-    // 根据筛选条件过滤 Todo 项
+    // 根据状态筛选条件过滤 Todo 项
     let filteredTodos;
     if (currentFilter === 'active') {
         filteredTodos = todos.filter(function(item) {
@@ -192,34 +234,55 @@ function renderTodos() {
     } else {
         filteredTodos = todos; // 全部
     }
-    
+
+    // 根据标签筛选条件进一步过滤
+    if (currentTagFilter !== 'all') {
+        filteredTodos = filteredTodos.filter(function(item) {
+            return item.tag === currentTagFilter;
+        });
+    }
+
     // 更新计数（显示筛选后的数量）
     todoCountNum.textContent = filteredTodos.length;
-    
+
     // 如果没有 Todo 项，显示空状态
     if (todos.length === 0) {
         todoList.innerHTML = '';
         todoEmpty.classList.add('show');
         return;
-    }    
+    }
 
     // 隐藏空状态
     todoEmpty.classList.remove('show');
+
     // 生成 HTML 字符串
     let html = '';
     filteredTodos.forEach(function(todo) {
-
         // 根据完成状态添加不同的类名
         const completedClass = todo.completed ? 'completed' : '';
-    
+
+        // 生成标签 HTML
+        let tagHtml = '';
+        if (todo.tag && TAG_CONFIG[todo.tag]) {
+            const tagConfig = TAG_CONFIG[todo.tag];
+            tagHtml = `<span class="todo-tag ${tagConfig.class}" data-tag="${todo.tag}">
+                <span class="tag-dot"></span>${tagConfig.label}
+            </span>`;
+        } else {
+            // 无标签时显示添加标签按钮
+            tagHtml = `<span class="todo-tag" data-tag="">+ 标签</span>`;
+        }
+
         html += `
             <li class="todo-item ${completedClass}" data-id="${todo.id}">
                 <div class="todo-checkbox"></div>
                 <span class="todo-text">${todo.text}</span>
+                ${tagHtml}
                 <button class="todo-delete">删除</button>
             </li>
         `;
     });
+
     // 更新 DOM
     todoList.innerHTML = html;
 }
@@ -267,7 +330,6 @@ function toggleTodo(id) {
 function saveTodosToStorage() {
     // 把数组转换成 JSON 字符串后存储
     localStorage.setItem('todos', JSON.stringify(todos));
-   // console.log('storage有： Todo 数据:', JSON.parse(localStorage.getItem('todos')));
 }
 
 /**
@@ -282,6 +344,114 @@ function loadTodosFromStorage() {
             // 如果解析失败，使用空数组
             todos = [];
         }
+    }
+}
+
+/**
+ * 保存筛选状态到 localStorage
+ */
+function saveFilterState() {
+    const filterState = {
+        currentFilter: currentFilter,
+        currentTagFilter: currentTagFilter
+    };
+    localStorage.setItem('todoFilterState', JSON.stringify(filterState));
+}
+
+/**
+ * 从 localStorage 加载筛选状态
+ */
+function loadFilterState() {
+    const stored = localStorage.getItem('todoFilterState');
+    if (stored) {
+        try {
+            const filterState = JSON.parse(stored);
+            currentFilter = filterState.currentFilter || 'all';
+            currentTagFilter = filterState.currentTagFilter || 'all';
+
+            // 更新 UI 上的筛选按钮状态
+            updateFilterButtonsUI();
+        } catch (e) {
+            // 如果解析失败，使用默认值
+            currentFilter = 'all';
+            currentTagFilter = 'all';
+        }
+    }
+}
+
+/**
+ * 更新筛选按钮的 UI 状态
+ */
+function updateFilterButtonsUI() {
+    // 更新状态筛选按钮
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    filterBtns.forEach(function(btn) {
+        btn.classList.remove('active');
+        if (btn.getAttribute('data-filter') === currentFilter) {
+            btn.classList.add('active');
+        }
+    });
+
+    // 更新标签筛选按钮
+    const tagFilterBtns = document.querySelectorAll('.tag-filter-btn');
+    tagFilterBtns.forEach(function(btn) {
+        btn.classList.remove('active');
+        if (btn.getAttribute('data-tag-filter') === currentTagFilter) {
+            btn.classList.add('active');
+        }
+    });
+}
+
+/**
+ * 开始编辑标签
+ */
+function startTagEdit(todoId, tagElement) {
+    const todo = todos.find(function(item) {
+        return item.id === todoId;
+    });
+
+    if (!todo) return;
+
+    // 创建下拉选择框
+    const select = document.createElement('select');
+    select.className = 'tag-edit-select';
+
+    // 添加选项
+    const options = [
+        { value: '', label: '无标签' },
+        { value: 'work', label: '工作' },
+        { value: 'life', label: '生活' },
+        { value: 'study', label: '学习' }
+    ];
+
+    options.forEach(function(opt) {
+        const option = document.createElement('option');
+        option.value = opt.value;
+        option.textContent = opt.label;
+        if (opt.value === (todo.tag || '')) {
+            option.selected = true;
+        }
+        select.appendChild(option);
+    });
+
+    // 替换标签元素为下拉框
+    tagElement.replaceWith(select);
+    select.focus();
+}
+
+/**
+ * 更新 Todo 的标签
+ */
+function updateTodoTag(todoId, newTag) {
+    const todo = todos.find(function(item) {
+        return item.id === todoId;
+    });
+
+    if (todo) {
+        todo.tag = newTag || null;
+        saveTodosToStorage();
+        renderTodos();
+        console.log('更新了 Todo 标签:', todo);
     }
 }
 

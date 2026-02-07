@@ -51,21 +51,41 @@
 <!-- 这里有input框框，确认按钮，统计信息，列表 -->
           <!-- 新增 Todo 输入区 -->
         <div class="todo-input-container">
-          <input 
-          type="text" 
-          id="todo-input" 
-          class="todo-input" 
+          <input
+          type="text"
+          id="todo-input"
+          class="todo-input"
           placeholder="输入新的待办事项，按回车添加..."
           autocomplete="off"
           >
+          <select id="todo-tag-select" class="todo-tag-select">
+            <option value="">选择标签</option>
+            <option value="work">工作</option>
+            <option value="life">生活</option>
+            <option value="study">学习</option>
+          </select>
           <button id="add-todo-btn" class="btn btn-primary">添加</button>
         </div>
-        <!-- 筛选按钮组 -->
+        <!-- 状态筛选按钮组 -->
         <div class="todo-filters">
           <button class="filter-btn active" data-filter="all">全部</button>
           <button class="filter-btn" data-filter="active">未完成</button>
           <button class="filter-btn" data-filter="completed">已完成</button>
           <span class="todo-count">共 <span id="todo-count-num">0</span> 项</span>
+        </div>
+        <!-- 标签筛选按钮组 -->
+        <div class="tag-filters">
+          <span class="tag-filter-label">标签筛选：</span>
+          <button class="tag-filter-btn active" data-tag-filter="all">全部</button>
+          <button class="tag-filter-btn" data-tag-filter="work">
+            <span class="tag-color work"></span>工作
+          </button>
+          <button class="tag-filter-btn" data-tag-filter="life">
+            <span class="tag-color life"></span>生活
+          </button>
+          <button class="tag-filter-btn" data-tag-filter="study">
+            <span class="tag-color study"></span>学习
+          </button>
         </div>
         <!-- Todo 列表容器 -->
         <ul class="todo-list" id="todo-list">
