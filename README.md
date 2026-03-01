@@ -6,9 +6,7 @@
 
 ## 在线访问
 
-部署后填入地址：`https://your-app.vercel.app`
-
-原 JS 原生版 Todo 应用：[todo.jiangxu.net](https://todo.jiangxu.net)
+地址：[todo.jiangxu.net](https://todo.jiangxu.net)
 
 ## 这是什么项目？
 
