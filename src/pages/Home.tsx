@@ -9,11 +9,11 @@ export default function Home() {
           Todo List 三框架对比教程
         </h1>
         <p className="text-base text-gray-600 leading-relaxed max-w-2xl">
-          通过同一个 Todo List 项目，对比学习
-          <span className="font-semibold text-yellow-600"> JavaScript 原生</span>、
-          <span className="font-semibold text-green-600"> Vue </span>和
-          <span className="font-semibold text-blue-600"> React </span>
-          的写法差异。每一章都有三种实现的代码并排对比，帮你快速理解框架之间的异同。
+          围绕三个完整的 Todo List 工程项目，逐章拆解
+          <span className="font-semibold text-yellow-600"> JS 原生</span>、
+          <span className="font-semibold text-green-600"> Vue + Pinia </span>和
+          <span className="font-semibold text-blue-600"> React + Zustand </span>
+          的核心差异。先看章节学语法，再看「🚀 工程级 Demo」看完整源码。
         </p>
       </div>
 

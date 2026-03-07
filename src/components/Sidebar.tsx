@@ -50,7 +50,20 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
           </nav>
         </div>
 
-        <div className="p-5 border-t border-gray-200">
+        <div className="p-5 border-t border-gray-200 space-y-1">
+          <NavLink
+            to="/demo"
+            onClick={onClose}
+            className={({ isActive }) =>
+              `block px-3 py-2 rounded-md text-sm font-semibold no-underline transition-colors ${
+                isActive
+                  ? "bg-blue-50 text-blue-700"
+                  : "text-blue-500 hover:bg-blue-50 hover:text-blue-700"
+              }`
+            }
+          >
+            🚀 工程级 Demo
+          </NavLink>
           <NavLink
             to="/guide"
             onClick={onClose}
