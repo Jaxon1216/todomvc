@@ -1,6 +1,33 @@
+import { useState } from "react"
 import { useParams, Link } from "react-router-dom"
 import { chapters } from "../data/codeSnippets"
 import CodeCompare from "../components/CodeCompare"
+
+function ThinkingGuide({ content }: { content: string }) {
+  const [open, setOpen] = useState(false)
+
+  return (
+    <div className="mb-4 rounded-lg border border-amber-200 bg-amber-50/60">
+      <button
+        onClick={() => setOpen(!open)}
+        className="w-full flex items-center gap-2 px-4 py-2.5 text-left text-sm font-medium text-amber-800 hover:bg-amber-100/60 rounded-lg transition-colors cursor-pointer"
+      >
+        <span className="text-base">{open ? "▾" : "▸"}</span>
+        <span>💡 动手前想一想</span>
+        <span className="ml-auto text-xs text-amber-500 font-normal">
+          {open ? "收起" : "展开思路引导"}
+        </span>
+      </button>
+      {open && (
+        <div className="px-4 pb-3 pt-0">
+          <pre className="whitespace-pre-wrap text-sm text-amber-900/80 leading-relaxed font-mono bg-amber-100/40 rounded-md p-3">
+            {content}
+          </pre>
+        </div>
+      )}
+    </div>
+  )
+}
 
 export default function ChapterPage() {
   const { id } = useParams()
@@ -45,6 +72,9 @@ export default function ChapterPage() {
             <p className="text-gray-600 leading-relaxed mb-4">
               {section.explanation}
             </p>
+            {section.thinkingGuide && (
+              <ThinkingGuide content={section.thinkingGuide} />
+            )}
             <CodeCompare snippets={section.snippets} />
           </section>
         ))}
