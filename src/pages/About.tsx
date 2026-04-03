@@ -42,9 +42,13 @@ export default function About() {
   return (
     <div className="max-w-2xl mx-auto">
       <div className="text-center mb-10">
-        <h1 className="text-2xl font-bold text-gray-800 mb-2">江旭 / EastonJiang</h1>
-        <p className="text-gray-500 text-sm">Frontend Developer · Lifelong Learner · Open Source Enthusiast</p>
-        <p className="text-gray-400 text-sm mt-1 italic">
+        <h1 className="font-[var(--font-display)] text-3xl font-bold text-[var(--color-ink)] mb-2 tracking-tight">
+          江旭 / EastonJiang
+        </h1>
+        <p className="font-[var(--font-body)] text-[var(--color-ink-light)] text-[14px]">
+          Frontend Developer · Lifelong Learner · Open Source Enthusiast
+        </p>
+        <p className="font-[var(--font-display)] text-[var(--color-ink-faint)] text-[14px] mt-2 italic">
           Obsessed is a word the lazy use to describe the dedicated.
         </p>
       </div>
@@ -56,15 +60,15 @@ export default function About() {
             href={link.href}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-3 px-4 py-3 rounded-lg border border-gray-200 hover:border-blue-300 hover:bg-blue-50/50 transition-colors text-gray-700 hover:text-blue-600 no-underline"
+            className="flex items-center gap-3 px-4 py-3 rounded-xl border border-[var(--color-line)] bg-[var(--color-card)] hover:border-stone-300 hover:shadow-sm transition-all text-[var(--color-ink-light)] hover:text-[var(--color-ink)] no-underline"
           >
-            <span className="text-gray-400">{iconMap[link.icon]}</span>
-            <span className="text-sm font-medium">{link.label}</span>
+            <span className="text-[var(--color-ink-faint)]">{iconMap[link.icon]}</span>
+            <span className="text-[13px] font-[var(--font-body)] font-medium">{link.label}</span>
           </a>
         ))}
       </div>
 
-      <div className="border-t border-gray-200 pt-6 text-center text-xs text-gray-400 space-y-1">
+      <div className="border-t border-[var(--color-line)] pt-6 text-center text-[11px] font-[var(--font-body)] text-[var(--color-ink-faint)] space-y-1 tracking-wide">
         <p>热爱技术，持续学习，记录成长。</p>
         <p>&copy; {year} EastonJiang. All rights reserved.</p>
       </div>
